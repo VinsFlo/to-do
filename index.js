@@ -1,122 +1,94 @@
-class LocalStorage {
-	constructor() {
-		this.tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-	}
+//selecting dom elements for manipulation
+var input = document.querySelector("input[type = 'text']");
+var ul = document.querySelector("ul");
+var container = document.querySelector("div");
+var lists = document.querySelectorAll("li");
+var spans = document.getElementsByTagName("span");
+var pencil = document.querySelector("#pencil");
+var saveBtn = document.querySelector(".save");
+var clearBtn = document.querySelector(".clear");
+var tipsBtn = document.querySelector(".tipBtn");
+var closeBtn = document.querySelector(".closeBtn");
+var overlay = document.getElementById("overlay")
 
-	create(data) {
-
-		data.token = this.token;
-
-		this.tasks.push(data);
-
-		localStorage.setItem('tasks', JSON.stringify(this.tasks));
-	}
-
-	getIndexByToken(token) {
-		for (let i = 0; i < this.tasks.length; i++) {
-			if (this.tasks[i].token === token) {
-				return i;
-			}
-		}
-
-		return -1;
-	}
-
-	get token() {
-		return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-	}
-
-	update(data) {
-		let index = this.getIndexByToken(data.token);
-
-		if (index !== -1) {
-			this.tasks[index] = data;
-
-			localStorage.setItem('tasks', JSON.stringify(this.tasks));
-		}
-	}
-
-	delete(data) {
-		let index = this.getIndexByToken(data.token);
-
-		if (index !== -1) {
-			this.tasks.splice(index, 1);
-
-			localStorage.setItem('tasks', JSON.stringify(this.tasks));
-		}
+//function to delete todo if delete span is clicked.
+function deleteTodo() {
+	for (let span of spans) {
+		span.addEventListener("click", function () {
+			span.parentElement.remove();
+			event.stopPropagation();
+		});
 	}
 }
 
-const storage = new LocalStorage();
-
-const tasks = storage.tasks;
-
-const container = document.querySelector('.tasks');
-const template = document.querySelector('#task');
-
-const createTaskForm = document.querySelector('.create-task');
-const createTaskField = document.querySelector('.create-task__textarea');
-const createTaskButton = document.querySelector('.create-task__submit');
-
-function onCreateTask({ data }) {
-	const clone = template.content.cloneNode(true);
-
-	const task = clone.querySelector('.task');
-	const checkbox = clone.querySelector('.task__checkbox');
-	const title = clone.querySelector('.task__text');
-	const del = clone.querySelector('.task__delete');
-
-	title.innerHTML = data.value;
-	checkbox.checked = data.checked;
-
-	toggleTaskStatusClass({ checked: data.checked, task });
-
-	checkbox.addEventListener('input', () => {
-		data.checked = checkbox.checked;
-
-		toggleTaskStatusClass({ checked: data.checked, task });
-
-		storage.update(data);
-	});
-
-	title.addEventListener('input', () => {
-		data.value = title.innerHTML;
-
-		storage.update(data);
-	});
-
-	del.addEventListener('click', (e) => {
-		storage.delete(data);
-
-		task.remove();
-	});
-
-	container.appendChild(clone);
+//function to load todo if list is found in local storage.
+function loadTodo() {
+	if (localStorage.getItem('todoList')) {
+		ul.innerHTML = localStorage.getItem('todoList');
+		deleteTodo();
+	}
 }
 
-function toggleTaskStatusClass({ checked, task }) {
-	task.classList[checked ? 'add' : 'remove']('task--done');
-}
+//event listener for input to add new todo to the list.
+input.addEventListener("keypress", function (keyPressed) {
+	if (keyPressed.which === 13) {
+		//creating lists and span when enter is clicked
+		var li = document.createElement("li");
+		var spanElement = document.createElement("span");
+		var icon = document.createElement("i");
 
-tasks.forEach((data) => {
-	onCreateTask({ data });
+		var newTodo = this.value;
+		this.value = " ";
+
+		icon.classList.add('fas', 'fa-trash-alt');
+		spanElement.append(icon);
+		ul.appendChild(li).append(spanElement, newTodo);
+
+		deleteTodo();
+
+	}
+
 });
 
-createTaskForm.addEventListener('submit', (e) => {
-	e.preventDefault();
-
-	const value = createTaskField.value;
-
-	if (value) {
-		const data = {
-			value,
-			checked: false
-		};
-
-		storage.create(data);
-
-		onCreateTask({ data });
-
-		createTaskForm.reset();
+// event listener to linethrough list if clicked
+ul.addEventListener('click', function (ev) {
+	if (ev.target.tagName === 'LI') {
+		ev.target.classList.toggle('checked');
 	}
+}, false
+);
+
+//hide input box,when pencil icon is clicked
+pencil.addEventListener('click', function () {
+	input.classList.toggle('display');
 });
+
+//save todolist state so user can access it later
+saveBtn.addEventListener('click', function () {
+	localStorage.setItem('todoList', ul.innerHTML);
+
+});
+
+//clear all todo when clear button is clicked
+clearBtn.addEventListener('click', function () {
+	ul.innerHTML = "";
+	localStorage.removeItem('todoList', ul.innerHTML);
+});
+
+//display overlay when tips btn is clicked
+tipsBtn.addEventListener("click", function () {
+	overlay.style.height = "100%";
+});
+
+//close overlay when close btn is clicked
+closeBtn.addEventListener("click", function (e) {
+	e.preventDefault;
+	overlay.style.height = "0";
+
+})
+
+//delete todo
+deleteTodo();
+
+//load Todo
+loadTodo();
