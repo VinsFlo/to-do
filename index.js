@@ -16,7 +16,7 @@ function deleteTodo() {
 	for (let span of spans) {
 		span.addEventListener("click", function () {
 			span.parentElement.remove();
-			event.stopPropagation();
+			Event.stopPropagation(); //
 		});
 	}
 }
