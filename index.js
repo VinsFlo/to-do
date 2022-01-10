@@ -12,14 +12,14 @@ var closeBtn = document.querySelector(".closeBtn");
 var overlay = document.getElementById("overlay")
 
 //function to delete todo if delete span is clicked.
-function deleteTodo() {
-	for (let span of spans) {
-		span.addEventListener("click", function () {
-			span.parentElement.remove();
-			Event.stopPropagation(); //
-		});
-	}
-}
+// function deleteTodo() {
+// 	for (let span of spans) {
+// 		span.addEventListener("click", function () {
+// 			span.parentElement.remove();
+// 			Event.stopPropagation(); //
+// 		});
+// 	}
+// }
 
 //function to load todo if list is found in local storage.
 function loadTodo() {
