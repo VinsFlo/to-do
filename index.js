@@ -30,25 +30,25 @@ function loadTodo() {
 }
 
 //event listener for input to add new todo to the list.
-input.addEventListener("keypress", function (keyPressed) {
-	if (keyPressed.which === 13) {
-		//creating lists and span when enter is clicked
-		var li = document.createElement("li");
-		var spanElement = document.createElement("span");
-		var icon = document.createElement("i");
+// input.addEventListener("keypress", function (keyPressed) {
+// 	if (keyPressed.which === 13) {
+// 		//creating lists and span when enter is clicked
+// 		var li = document.createElement("li");
+// 		var spanElement = document.createElement("span");
+// 		var icon = document.createElement("i");
 
-		var newTodo = this.value;
-		this.value = " ";
+// 		var newTodo = this.value;
+// 		this.value = " ";
 
-		icon.classList.add('fas', 'fa-trash-alt');
-		spanElement.append(icon);
-		ul.appendChild(li).append(spanElement, newTodo);
+// 		icon.classList.add('fas', 'fa-trash-alt');
+// 		spanElement.append(icon);
+// 		ul.appendChild(li).append(spanElement, newTodo);
 
-		deleteTodo();
+// 		deleteTodo();
 
-	}
+// 	}
 
-});
+// });
 
 // event listener to linethrough list if clicked
 ul.addEventListener('click', function (ev) {
